@@ -5,6 +5,36 @@ namespace Utils {
 	{
 		a->AsActorValueOwner()->RestoreActorValue(RE::ACTOR_VALUE_MODIFIER::kDamage, av, -val);
 	}
+
+	float GetBlockCost(const RE::HitData& hitData) {
+        // Same implementation here as Get_block_cost_1403BED80 (address for Skyrim 1.5.97)
+        // Re-implemented instead of calling original game's function so I don't have to figure out
+        // addresses in other versions of the game
+        // Downside: implementation probably slightly slower due to different way of getting game setting values.
+        const auto gmstCollection = RE::GameSettingCollection::GetSingleton();
+        float fStaminaBlockDmgMult = 0.25f;
+        float fStaminaBlockStaggerMult = 5.f;
+        float fStaminaBlockBase = 0.f;
+
+		if (gmstCollection) {
+            const auto staminaBlockDmgMultSetting = gmstCollection->GetSetting("fStaminaBlockDmgMult");
+            const auto staminaBlockStaggerMultSetting = gmstCollection->GetSetting("fStaminaBlockStaggerMult");
+            const auto staminaBlockBaseSetting = gmstCollection->GetSetting("fStaminaBlockBase");
+
+			if (staminaBlockDmgMultSetting) {
+                fStaminaBlockDmgMult = staminaBlockDmgMultSetting->GetFloat();
+			}
+            if (staminaBlockStaggerMultSetting) {
+                fStaminaBlockStaggerMult = staminaBlockStaggerMultSetting->GetFloat();
+            }
+            if (staminaBlockBaseSetting) {
+                fStaminaBlockBase = staminaBlockBaseSetting->GetFloat();
+            }
+		}
+
+		return ((hitData.percentBlocked * hitData.physicalDamage) * fStaminaBlockDmgMult) +
+               ((fStaminaBlockStaggerMult * (float)hitData.stagger) + fStaminaBlockBase);
+    }
 }
 
 /*stamina blocking*/
@@ -60,6 +90,10 @@ void hitEventHook::processHit(RE::Actor* target, RE::HitData& hitData) {
 	}
 	float staminaDamage = staminaDamageBase * staminaDamageMult;
 	float targetStamina = target->AsActorValueOwner()->GetActorValue(RE::ActorValue::kStamina);
+
+	// Subtract the amount of stamina that the target is going to lose
+	// from the vanilla game's blocking costs
+	targetStamina -= Utils::GetBlockCost(hitData);
 	
 	//check whether there's enough stamina to block incoming attack
 	if (targetStamina < staminaDamage) {
