@@ -7,7 +7,7 @@ Updated version of D7ry's [Shield of Stamina](https://github.com/D7ry/ShieldOfSt
 
 ## Download
 
-The plugin can be downloaded from [its NexusMods page TODO]().
+The plugin can be downloaded from [its NexusMods page](https://www.nexusmods.com/skyrimspecialedition/mods/91626).
 
 ## Runtime Requirements (for users)
 
