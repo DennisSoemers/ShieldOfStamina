@@ -94,6 +94,9 @@ void hitEventHook::processHit(RE::Actor* target, RE::HitData& hitData) {
 	// Subtract the amount of stamina that the target is going to lose
 	// from the vanilla game's blocking costs
 	targetStamina -= Utils::GetBlockCost(hitData);
+	if (targetStamina < 0.f) {
+        targetStamina = 0.f;
+	}
 	
 	//check whether there's enough stamina to block incoming attack
 	if (targetStamina < staminaDamage) {
