@@ -6,7 +6,7 @@ message("Using toolchain file ${CMAKE_TOOLCHAIN_FILE}.")
 ########################################################################################################################
 project(
         ShieldOfStamina
-        VERSION 1.2.1
+        VERSION 1.2.2
         DESCRIPTION "Modified version of the Shield of Stamina mod for Skyrim."
         LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)

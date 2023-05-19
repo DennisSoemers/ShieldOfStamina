@@ -5,7 +5,7 @@
 //
 // Instead, edit the template in /cmake/version.h.in
 
-#define PROJECT_VER 1.2.1
+#define PROJECT_VER 1.2.2
 #define PROJECT_VER_MAJOR 1
 #define PROJECT_VER_MINOR 2
-#define PROJECT_VER_PATCH 1
+#define PROJECT_VER_PATCH 2

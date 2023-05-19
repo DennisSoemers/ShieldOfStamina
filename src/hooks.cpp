@@ -33,7 +33,7 @@ namespace Utils {
 		}
 
 		return ((hitData.percentBlocked * hitData.physicalDamage) * fStaminaBlockDmgMult) +
-               ((fStaminaBlockStaggerMult * (float)hitData.stagger) + fStaminaBlockBase);
+               ((fStaminaBlockStaggerMult * *(float*)&hitData.stagger) + fStaminaBlockBase);
     }
 }
 
@@ -106,6 +106,8 @@ void hitEventHook::processHit(RE::Actor* target, RE::HitData& hitData) {
 			target->NotifyAnimationGraph("staggerStart");
 		}
 		hitData.totalDamage = hitData.totalDamage - (targetStamina / staminaDamageMult);
+        //logger::info("staminaDamageMult = {}", staminaDamageMult);
+        //logger::info("set totalDamage to {}", hitData.totalDamage);
 		Utils::damageav(target, RE::ActorValue::kStamina,
 			targetStamina);
 		logger::debug("failed to block {} damage", hitData.totalDamage);
